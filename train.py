@@ -135,6 +135,19 @@ def main(args):
 
     print('Finished training!')
 
+    # torch.save({
+    #     'total_iter': total_iter, 
+    #     'model_state_dict': flow.state_dict(), 
+    #     'optimizer_state_dict': optimizer.state_dict(), 
+    #     'dataset': dataset, 
+    #     'batch_size': batch_size, 
+    #     'latent': latent, 
+    #     'coupling': coupling, 
+    #     'mid_dim': mid_dim, 
+    #     'hidden': hidden, 
+    #     'mask_config': mask_config}, 
+    #     './models/mnist/' + filename +'iter%d.tar' % total_iter)
+
     torch.save({
         'total_iter': total_iter, 
         'model_state_dict': flow.state_dict(), 
@@ -142,11 +155,27 @@ def main(args):
         'dataset': dataset, 
         'batch_size': batch_size, 
         'latent': latent, 
-        'coupling': coupling, 
+        'coupling': coupling,
+        'full_dim':full_dim,
         'mid_dim': mid_dim, 
         'hidden': hidden, 
         'mask_config': mask_config}, 
         './models/mnist/' + filename +'iter%d.tar' % total_iter)
+
+    torch.save({
+        'total_iter': total_iter, 
+        'model_state_dict': flow.state_dict(), 
+        'optimizer_state_dict': optimizer.state_dict(), 
+        'dataset': dataset, 
+        'batch_size': batch_size, 
+        'latent': latent, 
+        'coupling': coupling,
+        'full_dim':full_dim,
+        'mid_dim': mid_dim, 
+        'hidden': hidden, 
+        'mask_config': mask_config}, 
+        './models/mnist/' + "saved_dicts")
+
 
     print('Checkpoint Saved')
 
