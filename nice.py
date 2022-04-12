@@ -19,13 +19,22 @@ class Coupling(nn.Module):
         super(Coupling, self).__init__()
         self.mask_config = mask_config
 
+        # self.in_block = nn.Sequential(
+        #     nn.Linear(in_out_dim//2, mid_dim),
+        #     nn.ReLU())
+        # self.mid_block = nn.ModuleList([
+        #     nn.Sequential(
+        #         nn.Linear(mid_dim, mid_dim),
+        #         nn.ReLU()) for _ in range(hidden - 1)])
+
         self.in_block = nn.Sequential(
             nn.Linear(in_out_dim//2, mid_dim),
-            nn.ReLU())
+            nn.SiLU())
         self.mid_block = nn.ModuleList([
             nn.Sequential(
                 nn.Linear(mid_dim, mid_dim),
-                nn.ReLU()) for _ in range(hidden - 1)])
+                nn.SiLU()) for _ in range(hidden - 1)])
+
         self.out_block = nn.Linear(mid_dim, in_out_dim//2)
 
     def forward(self, x, reverse=False):
