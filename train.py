@@ -6,6 +6,9 @@ import torch, torchvision
 import numpy as np
 import nice, utils
 
+def keep_grad(output, input, grad_outputs=None):
+    return torch.autograd.grad(output, input, grad_outputs=grad_outputs, retain_graph=True, create_graph=True)[0]
+
 def main(args):
     device = torch.device("cuda:0")
 
@@ -103,7 +106,13 @@ def main(args):
                 inputs, dataset, zca=zca, mean=mean).to(device)
 
             # log-likelihood of input minibatch
-            loss = -flow(inputs).mean()
+            if args.gradp >0:
+                inputs.requires_grad_()
+                logp = flow(inputs).sum()
+                grad = keep_grad(logp, inputs)
+                loss = -logp/inputs.shape[0] + args.gradp*(grad**2).sum([-1]).mean()
+            else:
+                loss = -flow(inputs).mean()
             running_loss += float(loss)
 
             # backprop and update parameters
@@ -213,5 +222,10 @@ if __name__ == '__main__':
                         help='beta2 in Adam optimizer.',
                         type=float,
                         default=0.999)
+
+    parser.add_argument('--gradp',
+                        help='gradient penalty for logp.',
+                        type=float,
+                        default=None)
     args = parser.parse_args()
     main(args)
