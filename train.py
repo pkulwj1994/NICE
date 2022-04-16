@@ -227,5 +227,7 @@ if __name__ == '__main__':
                         help='gradient penalty for logp.',
                         type=float,
                         default=None)
+    parser.add_argument('--noise',action="store_true")
+
     args = parser.parse_args()
     main(args)
