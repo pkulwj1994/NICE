@@ -104,7 +104,12 @@ def main(args):
             inputs, _ = data
             inputs = utils.prepare_data(
                 inputs, dataset, zca=zca, mean=mean).to(device)
-
+            
+            if args.noise:
+                inputs = inputs + 0.1*torch.randn_like(inputs)
+            else:
+                pass
+            
             # log-likelihood of input minibatch
             if args.gradp >0:
                 inputs.requires_grad_()
